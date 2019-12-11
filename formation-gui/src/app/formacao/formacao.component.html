@@ -1,17 +1,31 @@
 
-<mat-card *ngFor="let formacao of formacoes; let f = index"> 
-  <h2>{{formacao.musica.titulo}}</h2> 
-  <table>
+<button class="formacao-button" mat-raised-button (click)="novaFormacao()">Criar nova formação</button>
 
-    <tr  *ngFor="let integrante of formacao.musica.integrantes; let i = index">
+<mat-card *ngIf="criandoNovaFormacao"> 
+  <h2>Nova formação</h2>
+  
+  <mat-form-field>
+      <mat-label>Música</mat-label>
+      <mat-select [(ngModel)]="musica">
+        <mat-option *ngFor="let musicaSelecionada of carregarMusicasComInteressados()" [value]="musicaSelecionada" (change)="selecionouMusica()">
+          {{musicaSelecionada.titulo}} - {{musicaSelecionada.artista}}
+        </mat-option>
+      </mat-select>
+  </mat-form-field>
+  <div *ngIf="musica != null">
+
+  <table>
+    <tr *ngFor="let integrante of musica.integrantes; let i = index">
         <th>{{integrante}}</th>
         
         <th>
         <mat-form-field>
+
           <mat-label>Interessados</mat-label>
-          <mat-select  [formControl]="associacoesDeFormacoes[f][i]" multiple>
-            <mat-option *ngFor="let interessado of formacao.musica.usuariosInteressados" [value]="interessado.nome">{{interessado.nome}}</mat-option>
-          </mat-select>
+          <mat-select [(ngModel)]="usuariosNovaFormacao[i]" multiple>
+              <mat-option *ngFor="let usuario of musica.usuariosInteressados" [value]="usuario">{{usuario.nome}}</mat-option>
+          </mat-select>          
+
         </mat-form-field>
         </th>
 
@@ -19,7 +33,26 @@
 
   </table>
 
-  <button mat-button (click)="submeter()">Submeter formationn ~~</button>
+  <button mat-button (click)="submeter()">Submeter formação</button>
+  </div>
 
+</mat-card>
+
+<mat-card *ngFor="let formacao of formacoes"> 
+  <h2>{{formacao.musica.titulo}}</h2> 
+  <table>
+
+    <tr *ngFor="let integrante of formacao.musica.integrantes; let i = index">
+        <th>{{integrante}}</th>
+        
+        <th>
+          <ul *ngIf="formacao.usuarios[i] !== undefined">
+            <li *ngFor="let usuario of formacao.usuarios[i]">{{usuario.nome}}</li>
+          </ul>
+        </th>
+
+    </tr>
+
+  </table>
 
 </mat-card>

@@ -12,10 +12,10 @@ import { Formacao } from '../../../../formation-common/formacao';
 
 export class FormacaoService {
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    private taURL = 'http://localhost:3000';
+    private formationURL = 'http://localhost:3000';
 
     criar(formacao: Formacao): Observable<Formacao> {
-        return this.http.post<any>(this.taURL + "/formacao", formacao, { headers: this.headers })
+        return this.http.post<any>(this.formationURL + "/formacao", formacao, { headers: this.headers })
             .pipe(
                 retry(2),
                 map(res => { if (res.success) { return formacao; } else { return null; } })
@@ -23,14 +23,14 @@ export class FormacaoService {
     }
 
     atualizar(formacao: Formacao): Observable<Formacao> {
-        return this.http.put<any>("/formacao", formacao, { headers: this.headers }).pipe(
+        return this.http.put<any>(this.formationURL + "/formacao", formacao, { headers: this.headers }).pipe(
             retry(2),
             map(res => { if (res.success) { return formacao; } else { return null; } })
         );
     }
 
     getFormacoes(): Observable<Formacao[]> {
-        return this.http.get<Formacao[]>(this.taURL + "/formacoes")
+        return this.http.get<Formacao[]>(this.formationURL + "/formacoes")
             .pipe(
                 retry(2)
             );
