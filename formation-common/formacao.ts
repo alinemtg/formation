@@ -3,7 +3,8 @@ import { Usuario } from './usuario';
 
 export class Formacao {
     musica: Musica;
-    associacao: Map<String,Usuario[]>;
+    usuarios: Usuario[][];
+    usuariosVisualizados: Usuario[];
   
     constructor() {
       this.clean();
@@ -11,7 +12,8 @@ export class Formacao {
   
     clean(): void {
       this.musica = new Musica();
-      this.associacao = new Map();
+      this.usuarios = [[]];
+      this.usuariosVisualizados = [];
     }
   
     clone(): Formacao {
@@ -22,16 +24,8 @@ export class Formacao {
   
     copyFrom(from: Formacao): void {
       this.musica = from.musica;
-      this.associacao = from.associacao;
-    }
-
-    iniciarAssociacao () {
-      let mapParaInicializacao = new Map();
-      this.musica.integrantes.forEach(integrante => {
-        let arrayUsuariosAssociados : Usuario[] = [];
-        mapParaInicializacao.set(integrante, arrayUsuariosAssociados);
-      });
-      this.associacao = mapParaInicializacao;
+      this.usuarios = from.usuarios;
+      this.usuariosVisualizados = from.usuariosVisualizados;
     }
 
   }
