@@ -1,5 +1,5 @@
 
-<button class="formacao-button" mat-raised-button (click)="novaFormacao()">Criar nova formação</button>
+<button class="formacao-button" mat-raised-button (click)="novaFormacao()" id="criarFormacao">Criar nova formação</button>
 
 <mat-card *ngIf="criandoNovaFormacao"> 
   <h2>Nova formação</h2>
@@ -7,7 +7,7 @@
   <mat-form-field>
       <mat-label>Música</mat-label>
       <mat-select [(ngModel)]="musica">
-        <mat-option *ngFor="let musicaSelecionada of carregarMusicasComInteressados()" [value]="musicaSelecionada" (change)="selecionouMusica()">
+        <mat-option *ngFor="let musicaSelecionada of carregarMusicasComInteressados()" [value]="musicaSelecionada" (change)="selecionouMusica()" name="musicaslist">
           {{musicaSelecionada.titulo}} - {{musicaSelecionada.artista}}
         </mat-option>
       </mat-select>
@@ -15,7 +15,7 @@
   <div *ngIf="musica != null">
 
   <table>
-    <tr *ngFor="let integrante of musica.integrantes; let i = index">
+    <tr *ngFor="let integrante of musica.integrantes; let i = index" name="integranteslist">
         <th>{{integrante}}</th>
         
         <th>
@@ -23,7 +23,7 @@
 
           <mat-label>Interessados</mat-label>
           <mat-select [(ngModel)]="usuariosNovaFormacao[i]" multiple>
-              <mat-option *ngFor="let usuario of musica.usuariosInteressados" [value]="usuario">{{usuario.nome}}</mat-option>
+              <mat-option *ngFor="let usuario of musica.usuariosInteressados" [value]="usuario" name="usuarioslist">{{usuario.nome}}</mat-option>
           </mat-select>          
 
         </mat-form-field>
@@ -33,12 +33,12 @@
 
   </table>
 
-  <button mat-button (click)="submeter()">Submeter formação</button>
+  <button mat-button (click)="submeter()" id="submeterFormacao" >Submeter formação</button>
   </div>
 
 </mat-card>
 
-<mat-card *ngFor="let formacao of formacoes"> 
+<mat-card *ngFor="let formacao of formacoes" name="formacoeslist"> 
   <h2>{{formacao.musica.titulo}}</h2> 
   <table>
 
