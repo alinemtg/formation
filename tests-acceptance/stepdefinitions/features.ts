@@ -19,18 +19,12 @@ async function cadastrarMusica(titulo, artista, integrantes, id), {
     await element(by.buttonText('Adicionar')).click();
 }
 
-// verifica se existe uma musica cadastrada ou nao de acordo com o titulo, artista e id 
-// (0 para saber se não existe, 1 para saber se existe uma e etc)
-async function musicasIguais(n,titulo,artista,id) { 
-    var allmusicas : ElementArrayFinder = element.all(by.name('musicaslist'));
-        var samemusica = allmusicas.filter(elem =>
-            pAND(sameArtista(elem,artista),sameTitulo(elem,titulo),sameID(elem,id)));
-    await tamanhoIgualA(samemusica,n);
-}
 
-// GIVE WHEN E THEN
+// - - - - - - - - - PASSOS - - - - - - - - -
 
 defineSupportCode(function ({ Given, When, Then }) {
+
+    // - - - - - - - - - - - Scenario I - - - - - - - - - - -
 
     Given(/^eu estou logada como "([^\"]*)" com CPF "(\d*)"$/, async (nome, cpf) => {
         await browser.get("http://localhost:4200/");
@@ -44,7 +38,7 @@ defineSupportCode(function ({ Given, When, Then }) {
         await element(by.buttonText('Fazer login')).click();
     })
 
-    Given(/^eu estou eu estou na pagina de montagem de formacao"$/, async (nome, cpf) => {
+    Given(/^eu estou eu estou na pagina de montagem de formacao$/, async () => {
         await browser.get("http://localhost:4200/administrador");
         await $("[name='montagemformacao']").click();
     })
@@ -54,15 +48,15 @@ defineSupportCode(function ({ Given, When, Then }) {
 
         await cadastrarMusica(titulo,artista,integrantes,id);
         usuariosInteressados.forEach(usuario => {
-        // CADASTRO
-        await $("input[name='cpfbox']").sendKeys(<string> usuario.cpf);
-        await $("input[name='nomebox']").sendKeys(<string> usuario.nome);
-        await element(by.buttonText('Cadastrar')).click();
-        // LOGIN
-        await $("input[name='loginbox']").sendKeys(<string> usuario.cpf);
-        await element(by.buttonText('Fazer login')).click();
-        // MARCAR INTERESSE NA MUSICA
-        await element(by.id('toggle')).click();
+            // CADASTRO
+            await $("input[name='cpfbox']").sendKeys(<string> usuario.cpf);
+            await $("input[name='nomebox']").sendKeys(<string> usuario.nome);
+            await element(by.buttonText('Cadastrar')).click();
+            // LOGIN
+            await $("input[name='loginbox']").sendKeys(<string> usuario.cpf);
+            await element(by.buttonText('Fazer login')).click();
+            // MARCAR INTERESSE NA MUSICA
+            await element(by.id('toggle')).click();
         });
     
     })
@@ -71,18 +65,18 @@ defineSupportCode(function ({ Given, When, Then }) {
         await element(by.id('criarFormacao')).click();
     }   
 
-    When (/^eu associo os integrantes "([^\"]*)" , "([^\"]*)" e "([^\"]*)" da música "([^\"]*)", id "([^\"]*)", com os usuarios "([^\"]*)", "([^\"]*)" e ""([^\"]*)", respectivamente/$), 
+    When (/^eu associo os integrantes "([^\"]*)" , "([^\"]*)" e "([^\"]*)" da música "([^\"]*)", ID "([^\"]*)", com os usuarios "([^\"]*)", "([^\"]*)" e ""([^\"]*)", respectivamente/$), 
     async(integrante1, integrante2, integrante3, musica, id, usuario1, usuario2, usuario3) =>{
         var allusuarios: ElementArrayFinder = element.all(by.name('usuarioslist'));
-        var s_usuario1 = allusuarios.filter(elem => elem.cpf = usuario1.cpf);
-        var s_usuario2 = allusuarios.filter(elem => elem.cpf = usuario2.cpf);
-        var s_usuario3 = allusuarios.filter(elem => elem.cpf = usuario3.cpf);
+        var s_usuario1 = allusuarios.filter(elem => elem.cpf == usuario1.cpf);
+        var s_usuario2 = allusuarios.filter(elem => elem.cpf == usuario2.cpf);
+        var s_usuario3 = allusuarios.filter(elem => elem.cpf == usuario3.cpf);
 
         var allmusicas : ElementArrayFinder = element.all(by.name('musicaslist'));
         var samemusica = allmusicas.filter(elem => sameID(elem,id));
 
         var allformacoes : ElementArrayFinder = element.all(by.name('formacoeslist'));
-        var sameformacao = allformacoes.filter(elem => elem.musica = samemusica);
+        var sameformacao = allformacoes.filter(elem => elem.musica == samemusica);
         
         sameformacao.associacao[ sameformacao.associacao.find(integrante1) ].push(usuario1);
 
@@ -99,19 +93,42 @@ defineSupportCode(function ({ Given, When, Then }) {
     Then (/^Then eu posso ver na lista de formacoes os integrantes "([^\"]*)" , "([^\"]*)" e "([^\"]*)" da música "([^\"]*)", id "([^\"]*)", com os usuarios "([^\"]*)", "([^\"]*)" e ""([^\"]*)", respectivamente/$)
     , async(integrante1, integrante2, integrante3, musica, id, usuario1, usuario2, usuario3) =>{
         var allusuarios: ElementArrayFinder = element.all(by.name('usuarioslist'));
-        var s_usuario1 = allusuarios.filter(elem => elem.cpf = usuario1.cpf);
-        var s_usuario2 = allusuarios.filter(elem => elem.cpf = usuario2.cpf);
-        var s_usuario3 = allusuarios.filter(elem => elem.cpf = usuario3.cpf);
+        var s_usuario1 = allusuarios.filter(elem => elem.cpf == usuario1.cpf);
+        var s_usuario2 = allusuarios.filter(elem => elem.cpf == usuario2.cpf);
+        var s_usuario3 = allusuarios.filter(elem => elem.cpf == usuario3.cpf);
 
         var allmusicas : ElementArrayFinder = element.all(by.name('musicaslist'));
         var samemusica = allmusicas.filter(elem => sameID(elem,id));
 
         var allformacoes : ElementArrayFinder = element.all(by.name('formacoeslist'));
-        var sameformacao = allformacoes.filter(elem => elem.musica = samemusica);
+        var sameformacao = allformacoes.filter(elem => elem.musica == samemusica);
         
         sameformacao.associacao[ sameformacao.associacao.find(integrante1) ].find(s_usuario1) != -1;
         sameformacao.associacao[ sameformacao.associacao.find(integrante2) ].find(s_usuario2) != -1;
         sameformacao.associacao[ sameformacao.associacao.find(integrante3) ].find(s_usuario3) != -1;
 
     }  
+
+    // - - - - - - - - - - - Scenario II - - - - - - - - - - -
+
+    Given(/^eu estou eu estou na pagina de montar a formacao$/, async () => {
+        await browser.get("http://localhost:4200/administrador");
+        await $("[name='montagemformacao']").click();
+    })
+
+    Given(/^existe uma musica com titulo "([^\"]*)", artista "([^\"]*)", integrantes "([^\"]*)", ID "(\d*)" e sem usuarios interessados$/, 
+    async (titulo, artista, integrantes, id, usuariosInteressados) => {
+        await cadastrarMusica(titulo,artista,integrantes,id);
+    })
+
+    When (/^seleciono criar nova formacao/$), async() =>{
+        await element(by.id('criarFormacao')).click();
+    }   
+
+    Then (/^Then eu não posso ver na lista de formacoes a música de ID "([^\"]*)"/$)
+    , async(id) =>{
+        var allformacoes : ElementArrayFinder = element.all(by.name('formacoeslist'));
+        var sameformacao = allformacoes.filter(elem => elem.musica.id == id).then(elems => expect(Promise.resolve(elems.length)).to.eventually.equal(0));
+    }  
+
 })
