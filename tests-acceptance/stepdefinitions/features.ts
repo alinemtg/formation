@@ -19,11 +19,6 @@ async function cadastrarMusica(titulo, artista, integrantes, id), {
     await element(by.buttonText('Adicionar')).click();
 }
 
-// verifica o tamanho do array de acordo com o parametro n
-async function tamanhoIgualA(set,n) {
-    await set.then(elems => expect(Promise.resolve(elems.length)).to.eventually.equal(n));
-}
-
 // verifica se existe uma musica cadastrada ou nao de acordo com o titulo, artista e id 
 // (0 para saber se não existe, 1 para saber se existe uma e etc)
 async function musicasIguais(n,titulo,artista,id) { 
@@ -87,7 +82,7 @@ defineSupportCode(function ({ Given, When, Then }) {
         var samemusica = allmusicas.filter(elem => sameID(elem,id));
 
         var allformacoes : ElementArrayFinder = element.all(by.name('formacoeslist'));
-        var sameformacao = allmusicas.filter(elem => elem.musica = samemusica);
+        var sameformacao = allformacoes.filter(elem => elem.musica = samemusica);
         
         sameformacao.associacao[ sameformacao.associacao.find(integrante1) ].push(usuario1);
 
@@ -112,8 +107,11 @@ defineSupportCode(function ({ Given, When, Then }) {
         var samemusica = allmusicas.filter(elem => sameID(elem,id));
 
         var allformacoes : ElementArrayFinder = element.all(by.name('formacoeslist'));
-        var sameformacao = allmusicas.filter(elem => elem.musica = samemusica);
+        var sameformacao = allformacoes.filter(elem => elem.musica = samemusica);
         
-        sameformacao.associacao[ sameformacao.associacao.find(integrante1) ].find(usuario1) != -1;
+        sameformacao.associacao[ sameformacao.associacao.find(integrante1) ].find(s_usuario1) != -1;
+        sameformacao.associacao[ sameformacao.associacao.find(integrante2) ].find(s_usuario2) != -1;
+        sameformacao.associacao[ sameformacao.associacao.find(integrante3) ].find(s_usuario3) != -1;
+
     }  
 })
